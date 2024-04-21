@@ -1,13 +1,10 @@
+import { AccountModel } from '../../domain/models/account'
+import { AddAccount, AddAccountModel } from '../../domain/use-cases/add-accounts'
 import { InvalidParamError, MissingParamError, ServerError } from '../errors'
 import { EmailValidator } from '../protocols'
 import { SignUpController } from './signup'
 
-type SutType = {
-    sut: SignUpController,
-    emailValidatorStub: EmailValidator
-}
-
-const makeEmailValidator = () => {
+const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
     isValid (email: string): boolean {
       return true
@@ -16,12 +13,35 @@ const makeEmailValidator = () => {
   return new EmailValidatorStub()
 }
 
+const makeAddAccount = (): AddAccount => {
+  class AddAccountStub implements AddAccount {
+    add (credentials: AddAccountModel): AccountModel {
+      const mockAccount = {
+        id: 'id',
+        name: 'valid name',
+        email: 'valid email',
+        password: 'valid password'
+      }
+      return mockAccount
+    }
+  }
+  return new AddAccountStub()
+}
+
+type SutType = {
+    sut: SignUpController,
+    emailValidatorStub: EmailValidator,
+    addAccountStub: AddAccount
+}
+
 const makeSut = (): SutType => {
   const emailValidatorStub = makeEmailValidator()
-  const sut = new SignUpController(emailValidatorStub)
+  const addAccountStub = makeAddAccount()
+  const sut = new SignUpController(emailValidatorStub, addAccountStub)
   return {
     sut,
-    emailValidatorStub
+    emailValidatorStub,
+    addAccountStub
   }
 }
 
@@ -145,5 +165,25 @@ describe('Sign Up Controller', () => {
     const response = sut.handle(httpsRequest)
     expect(response.statusCode).toBe(400)
     expect(response.body).toEqual(new InvalidParamError('confirmationPassword'))
+  })
+  // Test AddAccount interface
+  test('Must call AddAccount with correct values', () => {
+    const { sut, addAccountStub } = makeSut()
+    const isValidSpy = jest.spyOn(addAccountStub, 'add')
+    const request = {
+      body: {
+        name: 'Luis Pellizzon',
+        email: 'luis@gmail.com',
+        password: 123123,
+        confirmationPassword: 123123
+      }
+    }
+
+    sut.handle(request)
+    expect(isValidSpy).toHaveBeenCalledWith({
+      name: 'Luis Pellizzon',
+      email: 'luis@gmail.com',
+      password: 123123
+    })
   })
 })

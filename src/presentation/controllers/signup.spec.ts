@@ -10,7 +10,7 @@ type SutType = {
     emailValidatorStub: EmailValidator
 }
 
-const makeSut = () => {
+const makeSut = (): SutType => {
   class EmailValidatorStub implements EmailValidator {
     isValid (email: string): boolean {
       return true

@@ -4,6 +4,7 @@
     "module": "commonJS",
     "target": "ESNext",
     "esModuleInterop": true,
-    "allowJs": true
+    "allowJs": true,
+    "types": ["jest"]
   }
 }

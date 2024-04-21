@@ -1,1 +1,6 @@
-export type RequiredFields = ['name', 'email', 'password', 'confirmationPassword'];
+export enum RequiredFields {
+    Name = 'name',
+    Email = 'email',
+    Password = 'password',
+    ConfirmationPassword = 'confirmationPassword'
+}

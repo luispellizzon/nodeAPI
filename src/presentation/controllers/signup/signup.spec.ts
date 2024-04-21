@@ -15,7 +15,7 @@ const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
     add (credentials: AddAccountModel): AccountModel {
       const mockAccount = {
-        id: 'id',
+        id: 'valid_id',
         name: 'valid name',
         email: 'valid email',
         password: 'valid password'
@@ -202,5 +202,28 @@ describe('Sign Up Controller', () => {
     const response = sut.handle(request)
     expect(response.statusCode).toBe(500)
     expect(response.body).toEqual(new ServerError())
+  })
+  // Test success procedure
+  test('Must return 200 and user account information', () => {
+    const { sut } = makeSut()
+
+    const request = {
+      body: {
+        name: 'valid_name',
+        email: 'valid_email',
+        password: 'valid_password',
+        confirmationPassword: 'valid_password'
+      }
+    }
+
+    const response = sut.handle(request)
+    const { name, email, password } = response.body
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toEqual({
+      id: 'valid_id',
+      name,
+      email,
+      password
+    })
   })
 })

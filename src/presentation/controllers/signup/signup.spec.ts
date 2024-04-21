@@ -184,4 +184,23 @@ describe('Sign Up Controller', () => {
       password: 123123
     })
   })
+  // Test AddAccount on throw error
+  test('Must return 500 if AddAccount throws while add method', () => {
+    const { sut, addAccountStub } = makeSut()
+    const isValidSpy = jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const request = {
+      body: {
+        name: 'Luis Pellizzon',
+        email: 'luis@gmail.com',
+        password: 123123,
+        confirmationPassword: 123123
+      }
+    }
+
+    const response = sut.handle(request)
+    expect(response.statusCode).toBe(500)
+    expect(response.body).toEqual(new ServerError())
+  })
 })

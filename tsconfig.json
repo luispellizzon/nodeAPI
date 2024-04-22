@@ -5,6 +5,7 @@
     "target": "ESNext",
     "esModuleInterop": true,
     "allowJs": true,
-    "types": ["jest"]
+    "types": ["jest"],
+    "sourceMap": true,
   }
 }

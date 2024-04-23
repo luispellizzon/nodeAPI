@@ -1,9 +1,24 @@
-import { Encrypter } from './db-add-account-protocols'
+import { AccountModel, AddAccountModel, AddAccountRepository, Encrypter } from './db-add-account-protocols'
 import { DbAddAccount } from './db-add-account'
 
 type SutTypes = {
   sut: DbAddAccount,
-  encrypterStub: Encrypter
+  encrypterStub: Encrypter,
+  addAccountRepositoryStub: AddAccountRepository
+}
+const makeAddAccountRepositoryStub = (): AddAccountRepository => {
+  class AddAccountRepositoryStub implements AddAccountRepository {
+    async add (accountData: AddAccountModel): Promise<AccountModel> {
+      const mockAccount = {
+        id: 'valid_id',
+        name: 'valid_name',
+        email: 'valid_email',
+        password: 'hashed_password'
+      }
+      return new Promise((resolve) => resolve(mockAccount))
+    }
+  }
+  return new AddAccountRepositoryStub()
 }
 
 const makEncrypterStub = () => {
@@ -17,10 +32,12 @@ const makEncrypterStub = () => {
 
 const makeSut = () : SutTypes => {
   const encrypterStub = makEncrypterStub()
-  const sut = new DbAddAccount(encrypterStub)
+  const addAccountRepositoryStub = makeAddAccountRepositoryStub()
+  const sut = new DbAddAccount(encrypterStub, addAccountRepositoryStub)
   return {
     sut,
-    encrypterStub
+    encrypterStub,
+    addAccountRepositoryStub
   }
 }
 
@@ -48,5 +65,20 @@ describe('DbAddAccount UseCase', () => {
     jest.spyOn(encrypterStub, 'encrypt').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const promise = sut.add(accountData)
     expect(promise).rejects.toThrow()
+  })
+  test('Should call AddAccountRepository with correct values to create account', async () => {
+    const { sut, addAccountRepositoryStub } = makeSut()
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password'
+    }
+
+    const addSpy = jest.spyOn(addAccountRepositoryStub, 'add')
+    await sut.add(accountData)
+    expect(addSpy).toHaveBeenCalledWith({
+      ...accountData,
+      password: 'hashed_password'
+    })
   })
 })

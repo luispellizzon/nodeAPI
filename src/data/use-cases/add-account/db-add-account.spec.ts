@@ -1,14 +1,31 @@
+import { Encrypter } from '../../protocols/encrypter'
 import { DbAddAccount } from './db-add-account'
 
+type SutTypes = {
+  sut: DbAddAccount,
+  encrypterStub: Encrypter
+}
+
+const makEncrypterStub = () => {
+  class EncrypterStub implements Encrypter {
+    async encrypt (value: string): Promise<string> {
+      return new Promise(resolve => resolve('hashed_password'))
+    }
+  }
+  return new EncrypterStub()
+}
+
+const makeSut = () : SutTypes => {
+  const encrypterStub = makEncrypterStub()
+  const sut = new DbAddAccount(encrypterStub)
+  return {
+    sut,
+    encrypterStub
+  }
+}
 describe('DbAddAccount UseCase', () => {
   test('Should call Encrypter with correct password', async () => {
-    class EncrypterStub {
-      async encrypt (value: string): Promise<string> {
-        return new Promise(resolve => resolve('hashed_password'))
-      }
-    }
-    const encrypterStub = new EncrypterStub()
-    const sut = new DbAddAccount(encrypterStub)
+    const { sut, encrypterStub } = makeSut()
     const accountData = {
       name: 'valid_name',
       email: 'valid_email',

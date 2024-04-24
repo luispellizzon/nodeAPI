@@ -147,7 +147,7 @@ describe('Sign Up Controller', () => {
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
-    expect(httpResponse.body).toEqual(new ServerError())
+    expect(httpResponse.body).toEqual(new ServerError(null))
   })
   // Test confirmation password fails if not equal to password
   test('Should return 400 if password is not equal to confirmation password', async () => {
@@ -201,7 +201,7 @@ describe('Sign Up Controller', () => {
 
     const response = await sut.handle(request)
     expect(response.statusCode).toBe(500)
-    expect(response.body).toEqual(new ServerError())
+    expect(response.body).toEqual(new ServerError(null))
   })
   // Test success procedure
   test('Must return 200 and user account information', async () => {

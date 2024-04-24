@@ -27,7 +27,6 @@ export class LoginController implements Controller {
       }
       return new Promise(resolve => resolve(null))
     } catch (error) {
-      error.stack = 'any_stack'
       return serverError(error)
     }
   }

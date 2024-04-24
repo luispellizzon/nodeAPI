@@ -3,18 +3,18 @@ import { LogControllerDecorator } from './log'
 
 type SutTypes = {
   sut: LogControllerDecorator,
-  controllerStub: Controller
+  controllerStub: Controller,
 }
 const makeSut = (): SutTypes => {
   class ControllerStub implements Controller {
     async handle (httpRequest: HttpsRequest): Promise<HttpResponse> {
-      const httpResponse = {
+      const httpResponseMock = {
         statusCode: 200,
         body: {
           ok: 'ok'
         }
       }
-      return new Promise(resolve => resolve(httpResponse))
+      return new Promise(resolve => resolve(httpResponseMock))
     }
   }
   const controllerStub = new ControllerStub()
@@ -36,5 +36,24 @@ describe('Log Controller Decorator', () => {
     const controllerHandleSpy = jest.spyOn(controllerStub, 'handle')
     await sut.handle(httpRequest)
     expect(controllerHandleSpy).toHaveBeenCalledWith(httpRequest)
+  })
+
+  test('Should decorator return the same response from controller', async () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        name: 'valid_name',
+        email: 'valid_email',
+        password: 'valid_password',
+        confirmationPassword: 'valid_password'
+      }
+    }
+    const response = await sut.handle(httpRequest)
+    expect(response).toEqual({
+      statusCode: 200,
+      body: {
+        ok: 'ok'
+      }
+    })
   })
 })

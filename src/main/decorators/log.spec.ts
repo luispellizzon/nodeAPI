@@ -1,9 +1,13 @@
+import { Server } from 'http'
+import { ServerError } from '../../presentation/errors'
 import { Controller, HttpResponse, HttpsRequest } from '../../presentation/protocols'
 import { LogControllerDecorator } from './log'
+import { serverError } from '../../presentation/helpers/http-helper'
 
 type SutTypes = {
   sut: LogControllerDecorator,
   controllerStub: Controller,
+  logErrorRepositoryStub: any
 }
 const makeSut = (): SutTypes => {
   class ControllerStub implements Controller {
@@ -17,9 +21,11 @@ const makeSut = (): SutTypes => {
       return new Promise(resolve => resolve(httpResponseMock))
     }
   }
+
   const controllerStub = new ControllerStub()
   const sut = new LogControllerDecorator(controllerStub)
-  return { sut, controllerStub }
+  const logErrorRepositoryStub = null
+  return { sut, controllerStub, logErrorRepositoryStub }
 }
 
 describe('Log Controller Decorator', () => {
@@ -55,5 +61,22 @@ describe('Log Controller Decorator', () => {
         ok: 'ok'
       }
     })
+  })
+
+  test('Should LogControllerDecorator capture internal server error 500', async () => {
+    const { sut, controllerStub } = makeSut()
+    const errorMock = serverError(new Error())
+    const httpRequest = {
+      body: {
+        name: 'valid_name',
+        email: 'valid_email',
+        password: 'valid_password',
+        confirmationPassword: 'valid_password'
+      }
+    }
+
+    jest.spyOn(controllerStub, 'handle').mockReturnValueOnce(new Promise((resolve) => resolve(errorMock)))
+    const response = await sut.handle(httpRequest)
+    expect(response.statusCode).toBe(500)
   })
 })

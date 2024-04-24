@@ -8,6 +8,5 @@ export class LogMongoRepository implements LogErrorRepository {
       stack,
       date: new Date()
     })
-    return new Promise(resolve => resolve(null))
   }
 }

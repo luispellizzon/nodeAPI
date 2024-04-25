@@ -1,6 +1,6 @@
 import { LoginController } from './login'
 import { badRequest, serverError, success, unauthorized } from '../../helpers/http/http-helper'
-import { Authentication, HttpsRequest, Validation } from './login-protocols'
+import { Authentication, AuthenticationModel, HttpsRequest, Validation } from './login-protocols'
 import { ValidationComposite } from '../../helpers/validators'
 type SutTypes = {
     sut: LoginController,
@@ -29,7 +29,8 @@ const makeValidationStub = (): any => {
 
 const makeAuthenticationStub = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (email: string, password: string): Promise<string> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async auth (authentication: AuthenticationModel): Promise<string> {
       return new Promise(resolve => resolve('any_token'))
     }
   }
@@ -60,7 +61,7 @@ describe('Login Controller', () => {
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
     const fakeAccount = makeFakeAccount()
-    expect(isAuthSpy).toHaveBeenCalledWith(fakeAccount.email, fakeAccount.password)
+    expect(isAuthSpy).toHaveBeenCalledWith(fakeAccount)
   })
 
   test('Should return 401 if invalid credentials are provided', async () => {

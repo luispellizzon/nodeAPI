@@ -19,12 +19,7 @@ export class SignUpController implements Controller {
     if (error) {
       return badRequest(error)
     }
-    const requiredFieldsForSignUp: RequiredFields[] = [
-      RequiredFields.Name,
-      RequiredFields.Email,
-      RequiredFields.Password,
-      RequiredFields.ConfirmationPassword
-    ]
+
     try {
       const { name, email, password, confirmationPassword } = httpRequest.body
 

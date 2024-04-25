@@ -1,5 +1,5 @@
 import { LoginController } from './login'
-import { serverError, success, unauthorized } from '../../helpers/http-helper'
+import { badRequest, serverError, success, unauthorized } from '../../helpers/http-helper'
 import { Authentication, HttpsRequest, Validation } from './login-protocols'
 import { ValidationComposite } from '../../helpers/validators/validation-composite'
 type SutTypes = {
@@ -54,16 +54,6 @@ describe('Login Controller', () => {
     expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
   })
 
-  test('Should return 500 if emailValidator throws ', async () => {
-    const { sut, validationStub } = makeSut()
-    jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => {
-      throw new Error()
-    })
-    const httpRequest = makeFakeRequest()
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(serverError(new Error()))
-  })
-
   test('Should call Authentication with correct values', async () => {
     const { sut, authenticationStub } = makeSut()
     const isAuthSpy = jest.spyOn(authenticationStub, 'auth')
@@ -96,5 +86,13 @@ describe('Login Controller', () => {
     expect(httpResponse).toEqual(success({
       accessToken: 'any_token'
     }))
+  })
+
+  test('Should return error if ValidationComposite returns error ', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
+    const httpRequest = makeFakeRequest()
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new Error()))
   })
 })

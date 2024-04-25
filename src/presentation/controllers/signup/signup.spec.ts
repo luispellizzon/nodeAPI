@@ -1,7 +1,7 @@
 import { MissingParamError, ServerError } from '../../errors'
 import { AddAccount, AddAccountModel, AccountModel, HttpsRequest, Validation } from './signup-protocols'
 import { SignUpController } from './signup'
-import { success, serverError, badRequest } from '../../helpers/http-helper'
+import { success, serverError, badRequest } from '../../helpers/http/http-helper'
 
 type SutType = {
     sut: SignUpController,

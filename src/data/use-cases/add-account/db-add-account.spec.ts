@@ -1,6 +1,6 @@
 import { AccountModel, AddAccountModel, AddAccountRepository, Encrypter } from './db-add-account-protocols'
 import { DbAddAccount } from './db-add-account'
-import { success } from '../../../presentation/helpers/http-helper'
+import { success } from '../../../presentation/helpers/http/http-helper'
 
 type SutTypes = {
   sut: DbAddAccount,

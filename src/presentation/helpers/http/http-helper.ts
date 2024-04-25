@@ -1,7 +1,7 @@
-import { AccountModel } from '../controllers/signup/signup-protocols'
-import { ServerError } from '../errors/server-error'
-import { UnauthorizedError } from '../errors/unauthorized'
-import { HttpResponse } from '../protocols/http'
+import { AccountModel } from '../../controllers/signup/signup-protocols'
+import { ServerError } from '../../errors/server-error'
+import { UnauthorizedError } from '../../errors/unauthorized'
+import { HttpResponse } from '../../protocols/http'
 
 export const badRequest = (error: Error): HttpResponse => ({
   statusCode: 400,

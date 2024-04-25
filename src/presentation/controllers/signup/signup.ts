@@ -13,18 +13,12 @@ export class SignUpController implements Controller {
   }
 
   async handle (httpRequest: HttpsRequest): Promise<HttpResponse> {
-    const error = this.validation.validate(httpRequest.body)
-    if (error) {
-      return badRequest(error)
-    }
-
     try {
-      const { name, email, password, confirmationPassword } = httpRequest.body
-
-      if (password !== confirmationPassword) {
-        return badRequest(new InvalidParamError(RequiredFields.ConfirmationPassword))
+      const error = this.validation.validate(httpRequest.body)
+      if (error) {
+        return badRequest(error)
       }
-
+      const { name, email, password } = httpRequest.body
       const accountData = await this.addAccount.add({
         name,
         email,

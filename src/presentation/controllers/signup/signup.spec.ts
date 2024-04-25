@@ -57,15 +57,6 @@ const makeFakeRequest = ():HttpsRequest => (
   }
 )
 describe('Sign Up Controller', () => {
-  // Test confirmation password fails if not equal to password
-  test('Should return 400 if password is not equal to confirmation password', async () => {
-    const { sut } = makeSut()
-    const httpRequest = makeFakeRequest()
-    httpRequest.body.confirmationPassword = 'random_password'
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('confirmationPassword')))
-  })
-
   // Test AddAccount interface
   test('Must call AddAccount with correct values', async () => {
     const { sut, addAccountStub } = makeSut()

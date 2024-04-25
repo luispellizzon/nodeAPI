@@ -1,7 +1,5 @@
-import { InvalidParamError } from '../../errors'
 import { badRequest, success, serverError } from '../../helpers/http-helper'
 import { HttpResponse, HttpsRequest, Controller, AddAccount, Validation } from './signup-protocols'
-import { RequiredFields } from '../../types/required-fields'
 
 export class SignUpController implements Controller {
   private readonly addAccount: AddAccount

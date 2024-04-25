@@ -69,41 +69,6 @@ const makeFakeRequest = ():HttpsRequest => (
   }
 )
 describe('Sign Up Controller', () => {
-  // Test name param
-  test('Should return 400 if no name is provided', async () => {
-    const { sut } = makeSut()
-    const httpRequest = makeFakeRequest()
-    delete httpRequest.body.name
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('name')))
-  })
-
-  // Test email param
-  test('Should return 400 if no email is provided', async () => {
-    const { sut } = makeSut()
-    const httpRequest = makeFakeRequest()
-    delete httpRequest.body.email
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
-  })
-  // Test password param
-  test('Should return 400 if no password is provided', async () => {
-    const { sut } = makeSut()
-    const httpRequest = makeFakeRequest()
-    delete httpRequest.body.password
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('password')))
-  })
-
-  // Test confirm param
-  test('Should return 400 if no confirmation confirmationPassword is provided', async () => {
-    const { sut } = makeSut()
-    const httpRequest = makeFakeRequest()
-    delete httpRequest.body.confirmationPassword
-    const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('confirmationPassword')))
-  })
-
   // Test email validation param
   test('Should return 400 if email provided is INVALID', async () => {
     const { sut, emailValidatorStub } = makeSut()

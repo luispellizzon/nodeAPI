@@ -15,9 +15,15 @@ describe('Compare Fields Validation', () => {
   })
 
   // Test confirmation password fails if not equal to password
-  test('Should return InvalidParamError if fields are not equal', async () => {
+  test('Should return InvalidParamError if fields are not equal', () => {
     const sut = makeSut()
     const error = sut.validate({ field: 'any_value', fieldToCompare: 'different_value' })
     expect(error).toEqual(new InvalidParamError('fieldToCompare'))
+  })
+
+  test('Should return falsy if validation succeeds', () => {
+    const sut = makeSut()
+    const error = sut.validate({ field: 'any_value', fieldToCompare: 'any_value' })
+    expect(error).toBeFalsy()
   })
 })

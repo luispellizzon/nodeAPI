@@ -1,6 +1,6 @@
 import { MissingParamError } from '../../errors'
 import { RequiredFields } from '../../types/required-fields'
-import { Validation } from './validation'
+import { Validation } from '../../protocols/validation'
 import { ValidationComposite } from './validation-composite'
 
 const makeValidation = () => {

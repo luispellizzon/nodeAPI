@@ -3,9 +3,7 @@ import { RequiredFields } from '../../types/required-fields'
 import { Validation } from '../../protocols/validation'
 
 export class CompareFieldsValidation implements Validation {
-  private readonly fieldName:string
-  private readonly fieldNameToCompare:string
-  constructor (fieldName: string, fieldNameToCompare: string) {
+  constructor (private readonly fieldName: string, private readonly fieldNameToCompare: string) {
     this.fieldName = fieldName
     this.fieldNameToCompare = fieldNameToCompare
   }

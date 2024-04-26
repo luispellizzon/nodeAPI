@@ -1,4 +1,5 @@
 import { MongoClient, Collection } from 'mongodb'
+import { AccountModel } from '../../../../domain/models/account'
 
 export class MongoHelper {
   static client: MongoClient = null
@@ -21,5 +22,12 @@ export class MongoHelper {
       await this.connect(this.uri)
     }
     return this.client.db().collection(name)
+  }
+
+  static map (account: any): any {
+    return account && {
+      id: account._id,
+      ...account
+    }
   }
 }

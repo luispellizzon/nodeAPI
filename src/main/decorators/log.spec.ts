@@ -3,7 +3,7 @@ import { ServerError } from '../../presentation/errors'
 import { Controller, HttpResponse, HttpsRequest } from '../../presentation/protocols'
 import { LogControllerDecorator } from './log'
 import { serverError, success } from '../../presentation/helpers/http/http-helper'
-import { LogErrorRepository } from '../../data/protocols/log-error-repository'
+import { LogErrorRepository } from '../../data/protocols/db/log-error-repository'
 import { AccountModel } from '../../domain/models/account'
 
 const makeLogErrorRepositoryStub = ():LogErrorRepository => {

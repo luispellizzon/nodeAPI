@@ -4,8 +4,12 @@
     "module": "commonJS",
     "target": "ESNext",
     "esModuleInterop": true,
-    "allowJs": true,
-    "types": ["jest"],
-    "sourceMap": true,
-  }
+  },
+  "include":[
+    "src"
+  ],
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ]
 }

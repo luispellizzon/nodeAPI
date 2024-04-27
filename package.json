@@ -1,7 +1,8 @@
 {
-  "name": "nodeapi",
-  "version": "1.1.0",
-  "description": "",
+  "name": "node-api",
+  "version": "1.2.0",
+  "description": "Node API with Typescript, following TDD and SOLID principles",
+  "repository": "github:luispellizzon/nodeAPI",
   "main": "index.js",
   "scripts": {
     "start": "node dist/main/server.js",

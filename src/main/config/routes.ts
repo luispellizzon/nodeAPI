@@ -1,16 +1,15 @@
 import { Express, Router } from 'express'
 import { readdirSync } from 'fs'
 import path from 'path'
+import loginRoute from '../routes/login-route'
 
 export default (app: Express): void => {
   const router = Router()
   app.use('/api', router)
-  // fb.sync('**/src/main/routes/**route.ts').map(async (file) => {
-  //   (await import(`../../../${file}`)).default(router)
-  // })
+  loginRoute(router)
 
   readdirSync(path.join(__dirname, '../routes')).map(async (file) => {
-    if (!file.includes('.test.')) {
+    if (!file.includes('.test.') && !file.includes('.map')) {
       (await import(`../routes/${file}`)).default(router)
     }
   })

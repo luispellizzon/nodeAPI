@@ -4,7 +4,8 @@
     "module": "commonJS",
     "target": "ESNext",
     "esModuleInterop": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "rootDir": "src"
   },
   "include":[
     "src"

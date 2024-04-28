@@ -14,7 +14,7 @@ services:
     working_dir: /usr/workspace/node-api-ts
     command: bash -c "npm install --omit=dev && npm run debug"
     volumes: 
-      - ./dist:/usr/workspace/node-api-ts/dist/
+      - ./dist/:/usr/workspace/node-api-ts/dist/
       - ./package.json:/usr/workspace/node-api-ts/package.json
     ports: 
     - "5050:5050"

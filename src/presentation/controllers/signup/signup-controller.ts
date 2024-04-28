@@ -1,5 +1,6 @@
 import { Authentication } from '../../../domain/use-cases/authentication'
-import { badRequest, success, serverError } from '../../helpers/http/http-helper'
+import { AlreadyExistsError } from '../../errors'
+import { badRequest, success, serverError, forbidden } from '../../helpers/http/http-helper'
 import { HttpResponse, HttpsRequest, Controller, AddAccount, Validation } from './signup-controller-protocols'
 
 export class SignUpController implements Controller {
@@ -18,11 +19,15 @@ export class SignUpController implements Controller {
         return badRequest(error)
       }
       const { name, email, password } = httpRequest.body
-      await this.addAccount.add({
+      const account = await this.addAccount.add({
         name,
         email,
         password
       })
+
+      if (!account) {
+        return forbidden(new AlreadyExistsError('email'))
+      }
 
       const accessToken = await this.authentication.auth({
         email,

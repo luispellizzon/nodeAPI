@@ -54,7 +54,7 @@ const makeFakeAccount = (): AccountModel => (
   {
     id: 'valid_id',
     name: 'any_name',
-    email: 'any_email',
+    email: 'any_email@hotmail.com',
     password: 'any_password'
   }
 )
@@ -93,11 +93,11 @@ describe('Sign Up Controller', () => {
   })
 
   // Test success procedure
-  test('Must return 200 and user account information', async () => {
+  test('Must return 200 and user accessToken', async () => {
     const { sut } = makeSut()
     const httpRequest = makeFakeRequest()
     const response = await sut.handle(httpRequest)
-    expect(response).toEqual(success(makeFakeAccount()))
+    expect(response).toEqual(success({ accessToken: 'any_token' }))
   })
 
   // Test Validation interface
@@ -123,7 +123,7 @@ describe('Sign Up Controller', () => {
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
     const fakeAccount = makeFakeAccount()
-    expect(isAuthSpy).toHaveBeenCalledWith(fakeAccount)
+    expect(isAuthSpy).toHaveBeenCalledWith({ email: fakeAccount.email, password: fakeAccount.password })
   })
 
   test('Should return 500 if authentication throws ', async () => {

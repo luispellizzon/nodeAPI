@@ -1,5 +1,4 @@
 import { MongoClient, Collection } from 'mongodb'
-import { AccountModel } from '../../../../domain/models/account'
 
 export class MongoHelper {
   static client: MongoClient = null

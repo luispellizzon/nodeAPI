@@ -1,4 +1,4 @@
 export type SurveyAnswer = {
-    icon: string,
+    icon?: string,
     answer: string
 }

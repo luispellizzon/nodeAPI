@@ -37,6 +37,7 @@ describe('Survey Mongo Repository', () => {
     collection = await MongoHelper.getCollection('surveys')
     await collection.deleteMany({})
   })
+
   test('Should add a survey on success', async () => {
     const { sut } = makeSut()
     const data = makeSurveyData()

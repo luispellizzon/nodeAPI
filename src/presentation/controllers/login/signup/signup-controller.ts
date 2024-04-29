@@ -1,6 +1,6 @@
-import { Authentication } from '../../../domain/use-cases/authentication'
-import { AlreadyExistsError } from '../../errors'
-import { badRequest, success, serverError, forbidden } from '../../helpers/http/http-helper'
+import { Authentication } from '../../../../domain/use-cases/authentication'
+import { AlreadyExistsError } from '../../../errors'
+import { badRequest, success, serverError, forbidden } from '../../../helpers/http/http-helper'
 import { HttpResponse, HttpsRequest, Controller, AddAccount, Validation } from './signup-controller-protocols'
 
 export class SignUpController implements Controller {

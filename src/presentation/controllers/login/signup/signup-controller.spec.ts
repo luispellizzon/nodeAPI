@@ -1,7 +1,7 @@
-import { MissingParamError, ServerError, AlreadyExistsError } from '../../errors'
+import { MissingParamError, ServerError, AlreadyExistsError } from '../../../errors'
 import { AddAccount, AddAccountModel, AccountModel, HttpsRequest, Validation, Authentication, AuthenticationModel } from './signup-controller-protocols'
 import { SignUpController } from './signup-controller'
-import { success, serverError, badRequest, forbidden } from '../../helpers/http/http-helper'
+import { success, serverError, badRequest, forbidden } from '../../../helpers/http/http-helper'
 
 type SutType = {
   sut: SignUpController,

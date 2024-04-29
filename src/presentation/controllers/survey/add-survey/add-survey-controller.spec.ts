@@ -1,17 +1,21 @@
 import { AddSurveyController } from './add-survey-controller'
-import { Validation } from './add-survey-controller-protocols'
+import { Validation, AddSurvey, AddSurveyModel } from './add-survey-controller-protocols'
 import { badRequest } from '../../../helpers/http/http-helper'
+
 type SutTypes = {
     sut: AddSurveyController,
-    validationStub: Validation
+  validationStub: Validation,
+    addSurveyStub: AddSurvey
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = makeValidationStub()
-  const sut = new AddSurveyController(validationStub)
+  const addSurveyStub = makeAddSurveyStub()
+  const sut = new AddSurveyController(validationStub, addSurveyStub)
   return {
     sut,
-    validationStub
+    validationStub,
+    addSurveyStub
   }
 }
 
@@ -21,8 +25,16 @@ const makeValidationStub = (): Validation => {
       return null
     }
   }
-
   return new ValidationStub()
+}
+
+const makeAddSurveyStub = ():AddSurvey => {
+  class AddSurveyStub implements AddSurvey {
+    async add (surveyData: AddSurveyModel): Promise<void> {
+      return new Promise(resolve => resolve())
+    }
+  }
+  return new AddSurveyStub()
 }
 
 const makeFakeRequest = () => ({
@@ -50,5 +62,21 @@ describe('Add Survey', () => {
     const httpRequest = makeFakeRequest()
     const response = await sut.handle(httpRequest)
     expect(response).toEqual(badRequest(new Error()))
+  })
+
+  test('Should return 400 if Validation fails', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new Error())
+    const httpRequest = makeFakeRequest()
+    const response = await sut.handle(httpRequest)
+    expect(response).toEqual(badRequest(new Error()))
+  })
+
+  test('Should call AddSurvey with correct Values', async () => {
+    const { sut, addSurveyStub } = makeSut()
+    const addSurveySpy = jest.spyOn(addSurveyStub, 'add')
+    const httpRequest = makeFakeRequest()
+    await sut.handle(httpRequest)
+    expect(addSurveySpy).toHaveBeenCalledWith(httpRequest.body)
   })
 })

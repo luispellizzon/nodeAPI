@@ -1,4 +1,3 @@
-import { AccountModel } from '../../controllers/login/signup/signup-controller-protocols'
 import { ServerError } from '../../errors/server-error'
 import { UnauthorizedError } from '../../errors/unauthorized'
 import { HttpResponse } from '../../protocols/http'

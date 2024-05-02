@@ -4,7 +4,9 @@ import { forbidden, serverError, success } from '../../helpers/http/http-helper'
 import { HttpResponse, HttpsRequest, Middleware } from '../../protocols'
 
 export class AuthMiddleware implements Middleware {
-  constructor (private readonly loadAccountByToken: LoadAccountByToken) {
+  constructor (private readonly loadAccountByToken: LoadAccountByToken,
+    private readonly role?: string
+  ) {
     this.loadAccountByToken = loadAccountByToken
   }
 
@@ -12,7 +14,7 @@ export class AuthMiddleware implements Middleware {
     try {
       const accessToken = httpRequest.headers?.['x-access-token']
       if (accessToken) {
-        const user = await this.loadAccountByToken.load(accessToken)
+        const user = await this.loadAccountByToken.load(accessToken, this.role)
         if (user) {
           return success({ accountId: user.id })
         }

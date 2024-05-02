@@ -3,6 +3,7 @@ import { forbidden } from '../../helpers/http/http-helper'
 import { AccessDeniedError } from '../../errors/access-denied'
 import { LoadAccountByToken } from '../../../domain/use-cases/load-account-by-token'
 import { AccountModel } from '../../../domain/models/account'
+import { HttpsRequest } from '../../protocols'
 
 type SutTypes = {
     sut: AuthMiddleware,
@@ -27,7 +28,7 @@ const makeFakeAccount = ():AccountModel => (
   }
 )
 
-const makeFakeHeaderWithToken = () => ({
+const makeFakeHeaderWithToken = (): HttpsRequest => ({
   headers: {
     'x-access-token': 'any_token'
   }
@@ -55,5 +56,13 @@ describe('Auth Middleware', () => {
     const httpRequest = makeFakeHeaderWithToken()
     await sut.handle(httpRequest)
     expect(loadSpy).toHaveBeenCalledWith('any_token')
+  })
+
+  test('Should return 403 if LoadAccountByToken does not find a user', async () => {
+    const { sut, loadAccountByTokenStub } = makeSut()
+    jest.spyOn(loadAccountByTokenStub, 'load').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    const httpRequest = makeFakeHeaderWithToken()
+    const response = await sut.handle(httpRequest)
+    expect(response).toEqual(forbidden(new AccessDeniedError()))
   })
 })

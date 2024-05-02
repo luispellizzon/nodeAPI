@@ -1,6 +1,6 @@
 import { Decrypter } from '../../../data/protocols/cryptography/decrypter'
 import { Encrypter } from '../../../data/protocols/cryptography/encrypter'
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 export class JwtAdapter implements Encrypter, Decrypter {
   constructor (private readonly secret: string) {
     this.secret = secret
@@ -12,7 +12,7 @@ export class JwtAdapter implements Encrypter, Decrypter {
   }
 
   async decrypt (token: string): Promise<string> {
-    const value = await jwt.verify(token, this.secret) as string
-    return value
+    const decoded:any = await jwt.verify(token, this.secret)
+    return decoded
   }
 }

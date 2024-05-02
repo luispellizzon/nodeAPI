@@ -100,6 +100,7 @@ describe('Account Mongo Repository', () => {
       expect(account.email).toBe('valid_email@hotmail.com')
       expect(account.password).toBe('valid_password')
     })
+
     test('Should return an account on loadByToken with any role', async () => {
       const { sut } = makeSut()
       const accountData = {
@@ -116,6 +117,12 @@ describe('Account Mongo Repository', () => {
       expect(account.name).toBe('valid_name')
       expect(account.email).toBe('valid_email@hotmail.com')
       expect(account.password).toBe('valid_password')
+    })
+
+    test('Should return null if loadByToken fails', async () => {
+      const { sut } = makeSut()
+      const account = await sut.loadByEmail('any_token')
+      expect(account).toBeFalsy()
     })
   })
 })

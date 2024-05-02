@@ -101,17 +101,17 @@ describe('Account Mongo Repository', () => {
       expect(account.password).toBe('valid_password')
     })
 
-    test('Should return an account on loadByToken with any role', async () => {
+    test('Should return an account on loadByToken with admin role', async () => {
       const { sut } = makeSut()
       const accountData = {
         name: 'valid_name',
         email: 'valid_email@hotmail.com',
         password: 'valid_password',
-        role: 'any_role',
+        role: 'admin',
         accessToken: 'any_token'
       }
       await collection.insertOne(accountData)
-      const account = await sut.loadByToken('any_token', 'any_role')
+      const account = await sut.loadByToken('any_token', 'admin')
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
       expect(account.name).toBe('valid_name')
@@ -123,6 +123,37 @@ describe('Account Mongo Repository', () => {
       const { sut } = makeSut()
       const account = await sut.loadByEmail('any_token')
       expect(account).toBeFalsy()
+    })
+
+    test('Should return null on loadByToken with invalid role', async () => {
+      const { sut } = makeSut()
+      const accountData = {
+        name: 'valid_name',
+        email: 'valid_email@hotmail.com',
+        password: 'valid_password',
+        accessToken: 'any_token'
+      }
+      await collection.insertOne(accountData)
+      const account = await sut.loadByToken('any_token', 'admin')
+      expect(account).toBeFalsy()
+    })
+
+    test('Should return an account on loadByToken if user is admin', async () => {
+      const { sut } = makeSut()
+      const accountData = {
+        name: 'valid_name',
+        email: 'valid_email@hotmail.com',
+        password: 'valid_password',
+        role: 'admin',
+        accessToken: 'any_token'
+      }
+      await collection.insertOne(accountData)
+      const account = await sut.loadByToken('any_token')
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+      expect(account.name).toBe('valid_name')
+      expect(account.email).toBe('valid_email@hotmail.com')
+      expect(account.password).toBe('valid_password')
     })
   })
 })

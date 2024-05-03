@@ -29,7 +29,8 @@ const makeSurveyData = () => ({
   answers: [{
     icon: 'any_icon',
     answer: 'any_answer'
-  }]
+  }],
+  date: new Date()
 })
 
 describe('DB Add Survey use-case', () => {

@@ -21,7 +21,8 @@ const makeSurveyData = () => (
     },
     {
       answer: 'any_answer2'
-    }]
+    }],
+    date: new Date()
   }
 )
 

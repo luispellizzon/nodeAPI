@@ -2,7 +2,11 @@ import { LoadSurveysController } from './load-surveys-controller'
 import { LoadSurveys, SurveyModel } from './load-surveys-controller-protocols'
 import MockDate from 'mockdate'
 
-const makeSut = () => {
+type SutTypes = {
+  sut: LoadSurveysController,
+  loadSurveysStub: LoadSurveys
+}
+const makeSut = (): SutTypes => {
   const loadSurveysStub = makeLoadSurveysStub()
   const sut = new LoadSurveysController(loadSurveysStub)
 

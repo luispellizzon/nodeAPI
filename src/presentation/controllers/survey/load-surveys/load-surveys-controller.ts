@@ -1,3 +1,4 @@
+import { serverError, success } from '../../../helpers/http/http-helper'
 import { Controller, HttpResponse, HttpsRequest, LoadSurveys } from './load-surveys-controller-protocols'
 
 export class LoadSurveysController implements Controller {
@@ -6,7 +7,13 @@ export class LoadSurveysController implements Controller {
   }
 
   async handle (httpsRequest: HttpsRequest): Promise<HttpResponse> {
-    await this.loadSurveys.load()
-    return null
+    try {
+      const surveys = await this.loadSurveys.load()
+      if (surveys) {
+        return success(surveys)
+      }
+    } catch (e) {
+      return serverError(e)
+    }
   }
 }

@@ -9,9 +9,7 @@ export class LoadSurveysController implements Controller {
   async handle (httpsRequest: HttpsRequest): Promise<HttpResponse> {
     try {
       const surveys = await this.loadSurveys.load()
-      if (surveys) {
-        return success(surveys)
-      }
+      return success(surveys)
     } catch (e) {
       return serverError(e)
     }

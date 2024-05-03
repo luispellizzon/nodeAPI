@@ -1,5 +1,4 @@
-before_install:
-  - npm install -g npm@9
+dist: focal
 language: node_js
 node_js:
   - 20

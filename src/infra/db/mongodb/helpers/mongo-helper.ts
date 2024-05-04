@@ -1,4 +1,4 @@
-import { MongoClient, Collection } from 'mongodb'
+import { MongoClient, Collection, WithId, Document } from 'mongodb'
 
 export class MongoHelper {
   static client: MongoClient = null
@@ -23,10 +23,13 @@ export class MongoHelper {
     return this.client.db().collection(name)
   }
 
-  static map (account: any): any {
-    return account && {
-      id: account._id,
-      ...account
+  static map<T> (obj: WithId<Document>): T {
+    if (obj) {
+      if (obj._id !== undefined) {
+        const mappedObj = { id: obj._id.toString(), ...obj }
+        delete mappedObj._id
+        return mappedObj as T
+      }
     }
   }
 }

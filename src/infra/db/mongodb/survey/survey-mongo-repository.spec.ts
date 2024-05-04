@@ -12,16 +12,17 @@ const makeSut = (): SutTypes => {
   }
 }
 
-const makeSurveyData = () => (
+const makeSurveyData = (prefix: string) => (
   {
-    question: 'any_question',
+    question: `${prefix}_question`,
     answers: [{
-      icon: 'any_image',
-      answer: 'any_answer'
+      icon: `${prefix}_icon`,
+      answer: `${prefix}_answer`
     },
     {
-      answer: 'any_answer2'
-    }]
+      answer: `${prefix}_answer`
+    }],
+    date: new Date()
   }
 )
 
@@ -38,11 +39,30 @@ describe('Survey Mongo Repository', () => {
     await collection.deleteMany({})
   })
 
-  test('Should add a survey on success', async () => {
-    const { sut } = makeSut()
-    const data = makeSurveyData()
-    await sut.add(data)
-    const surveyCollection = await collection.findOne({ question: 'any_question' })
-    expect(surveyCollection).toBeTruthy()
+  describe('add()', () => {
+    test('Should add a survey on success', async () => {
+      const { sut } = makeSut()
+      const data = makeSurveyData('any')
+      await sut.add(data)
+      const surveyCollection = await collection.findOne({ question: 'any_question' })
+      expect(surveyCollection).toBeTruthy()
+    })
+  })
+
+  describe('loadAll()', () => {
+    test('Should load all surveys on success', async () => {
+      await collection.insertMany([makeSurveyData('any'), makeSurveyData('other')])
+      const { sut } = makeSut()
+      const surveys = await sut.loadAll()
+      expect(surveys.length).toBe(2)
+      expect(surveys[0].question).toBe('any_question')
+      expect(surveys[1].question).toBe('other_question')
+    })
+
+    test('Should return empty list of surveys', async () => {
+      const { sut } = makeSut()
+      const surveys = await sut.loadAll()
+      expect(surveys.length).toBe(0)
+    })
   })
 })

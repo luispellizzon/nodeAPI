@@ -1,4 +1,4 @@
-export type SurveyAnswer = {
+export type SurveyAnswerModel = {
     icon?: string,
     answer: string
 }

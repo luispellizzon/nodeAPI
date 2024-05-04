@@ -5,7 +5,7 @@ import { Collection } from 'mongodb'
 import { sign } from 'jsonwebtoken'
 import env from '../config/env'
 
-let collection: Collection
+let surveysCollection: Collection
 let accountCollection: Collection
 describe('Survey Route', () => {
   beforeAll(async () => {
@@ -15,9 +15,9 @@ describe('Survey Route', () => {
     await MongoHelper.disconnect()
   })
   beforeEach(async () => {
-    collection = await MongoHelper.getCollection('surveys')
+    surveysCollection = await MongoHelper.getCollection('surveys')
     accountCollection = await MongoHelper.getCollection('accounts')
-    await collection.deleteMany({})
+    await surveysCollection.deleteMany({})
     await accountCollection.deleteMany({})
   })
 
@@ -106,6 +106,37 @@ describe('Survey Route', () => {
       await request(app)
         .get('/api/surveys')
         .expect(403)
+    })
+
+    test('Should return 200 on load surveys success with valid accessToken', async () => {
+      const res = await accountCollection.insertOne({
+        name: 'valid_name',
+        email: 'valid_email@gmail.com',
+        password: 'valid_password'
+      })
+      const accessToken = sign({ id: res.insertedId.toString() }, env.jwtSecret)
+      await accountCollection.updateOne({
+        _id: res.insertedId
+      }, {
+        $set: {
+          accessToken
+        }
+      })
+      await surveysCollection.insertOne({
+        question: 'any_question',
+        answers: [{
+          icon: 'any_image',
+          answer: 'any_answer'
+        },
+        {
+          answer: 'any_answer2'
+        }],
+        date: new Date()
+      })
+      await request(app)
+        .get('/api/surveys')
+        .set('x-access-token', accessToken)
+        .expect(200)
     })
   })
 })

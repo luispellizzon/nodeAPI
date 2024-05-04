@@ -42,7 +42,7 @@ const makeFakeSurveys = () => ([
 
 describe('Load Surveys Controller', () => {
   beforeAll(() => MockDate.set(new Date()))
-  beforeAll(() => MockDate.reset())
+  afterAll(() => MockDate.reset())
   test('Should call LoadSurveys', async () => {
     const { sut, loadSurveysStub } = makeSut()
     const loadSurveySpy = jest.spyOn(loadSurveysStub, 'load')

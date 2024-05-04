@@ -2,6 +2,11 @@ dist: focal
 language: node_js
 node_js:
   - 20
+  - node
 script:
   - eslint 'src/**'
-  - npm run test:coveralls
+jobs:
+  include:
+    - stage: Produce Coverage
+      node_js: node
+      script: npm run test:coveralls

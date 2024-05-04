@@ -1,7 +1,7 @@
 import { LoginController } from './login-controller'
-import { badRequest, serverError, success, unauthorized } from '../../../helpers/http/http-helper'
+import { badRequest, serverError, success, unauthorized } from '@/presentation/helpers/http/http-helper'
 import { Authentication, AuthenticationModel, HttpsRequest, Validation } from './login-controller-protocols'
-import { ValidationComposite } from '../../../../validation/validators/validation-composite'
+import { ValidationComposite } from '@/validation/validators/validation-composite'
 type SutTypes = {
     sut: LoginController,
   authenticationStub: Authentication,

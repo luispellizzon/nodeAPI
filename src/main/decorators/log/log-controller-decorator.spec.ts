@@ -1,10 +1,13 @@
-import { Server } from 'http'
-import { ServerError } from '../../../presentation/errors'
-import { Controller, HttpResponse, HttpsRequest } from '../../../presentation/protocols'
+import {
+  Controller,
+  HttpResponse,
+  HttpsRequest,
+  serverError,
+  success,
+  AccountModel,
+  LogErrorRepository
+} from './log-controller-decorator-protocols'
 import { LogControllerDecorator } from './log-controller-decorator'
-import { serverError, success } from '../../../presentation/helpers/http/http-helper'
-import { LogErrorRepository } from '../../../data/protocols/db/log/log-error-repository'
-import { AccountModel } from '../../../domain/models/account'
 
 const makeLogErrorRepositoryStub = ():LogErrorRepository => {
   class LogErrorRepositoryStub implements LogErrorRepository {

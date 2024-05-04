@@ -1,5 +1,5 @@
 import { DbAddSurvey } from './db-add-survey'
-import { AddSurveyRepository, AddSurveyModel } from './add-survey-protocols'
+import { AddSurveyRepository, AddSurveyModel } from './db-add-survey-protocols'
 
 type SutTypes = {
     sut: DbAddSurvey,

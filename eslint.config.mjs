@@ -24,7 +24,7 @@ export default [
       globals: globals.browser,
       sourceType: 'commonjs',
       parserOptions: {
-        project: './tsconfig.eslint.json'
+        project: './tsconfig.json'
       }
     }
   }

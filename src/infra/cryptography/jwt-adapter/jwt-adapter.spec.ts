@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken'
 import { JwtAdapter } from './jwt-adapter'
-import { verify } from 'crypto'
 
 type SutTypes = {
     sut: JwtAdapter

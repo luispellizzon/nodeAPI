@@ -44,11 +44,11 @@ describe('DbLoadSurveyById use-case', () => {
   beforeAll(() => MockDate.set(new Date()))
   afterAll(() => MockDate.reset())
 
-  test('should call LoadSurveyByIdRepository ', async () => {
+  test('should call LoadSurveyByIdRepository with correct id value', async () => {
     const { sut, loadSurveyByIdRepositoryStub } = makeSut()
     const loadByIdSpy = jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById')
     await sut.loadById('any_id')
-    expect(loadByIdSpy).toHaveBeenCalled()
+    expect(loadByIdSpy).toHaveBeenCalledWith('any_id')
   })
 
   test('should throw if LoadSurveyByIdRepository throws', async () => {

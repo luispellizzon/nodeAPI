@@ -1,6 +1,7 @@
 import { Collection } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
+import MockDate from 'mockdate'
 
 type SutTypes = {
     sut: SurveyMongoRepository
@@ -29,9 +30,11 @@ const makeSurveyData = (prefix: string) => (
 let collection: Collection
 describe('Survey Mongo Repository', () => {
   beforeAll(async () => {
+    MockDate.set(new Date())
     await MongoHelper.connect(process.env.MONGO_URL)
   })
   afterAll(async () => {
+    MockDate.reset()
     await MongoHelper.disconnect()
   })
   beforeEach(async () => {
@@ -72,6 +75,16 @@ describe('Survey Mongo Repository', () => {
       const { sut } = makeSut()
       const survey = await sut.loadById('609251905bf72b2e245f71ae')
       expect(survey).toBeNull()
+    })
+
+    test('Should return survey if id exists', async () => {
+      const { insertedId } = await collection.insertOne(makeSurveyData('any'))
+      const { sut } = makeSut()
+      const survey = await sut.loadById(insertedId.toString())
+      expect(survey.id).toBe(insertedId.toString())
+      expect(survey.question).toBe('any_question')
+      expect(survey.answers.length).toBe(2)
+      expect(survey.date).toEqual(new Date())
     })
   })
 })

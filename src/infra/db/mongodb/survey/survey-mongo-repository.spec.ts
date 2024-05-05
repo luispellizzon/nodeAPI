@@ -65,4 +65,13 @@ describe('Survey Mongo Repository', () => {
       expect(surveys.length).toBe(0)
     })
   })
+
+  describe('loadById()', () => {
+    test('Should return null if id is not found', async () => {
+      await collection.insertOne(makeSurveyData('any'))
+      const { sut } = makeSut()
+      const survey = await sut.loadById('609251905bf72b2e245f71ae')
+      expect(survey).toBeNull()
+    })
+  })
 })

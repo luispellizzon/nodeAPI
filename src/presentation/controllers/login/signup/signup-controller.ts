@@ -1,4 +1,4 @@
-import { Authentication } from '@/domain/use-cases/authentication'
+import { Authentication } from '@/domain/use-cases/account/authentication'
 import { AlreadyExistsError } from '@/presentation/errors'
 import { badRequest, success, serverError, forbidden } from '@/presentation/helpers/http/http-helper'
 import { HttpResponse, HttpsRequest, Controller, AddAccount, Validation } from './signup-controller-protocols'

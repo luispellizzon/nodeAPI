@@ -2,10 +2,8 @@ import { Collection } from 'mongodb'
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
 import MockDate from 'mockdate'
-import { SaveSurveyResultModel } from '@/domain/use-cases/save-survey-result'
-import { SurveyResultModel } from '@/domain/models/survey-result'
-import { SurveyModel } from '../survey-mongo-repository-protocols'
-import { AccountModel, AddAccountModel } from '../../account/account-mongo-repository-protocols'
+import { SurveyModel } from '../survey/survey-mongo-repository-protocols'
+import { AccountModel, AddAccountModel } from '../account/account-mongo-repository-protocols'
 
 type SutTypes = {
     sut: SurveyResultMongoRepository
@@ -45,15 +43,6 @@ const makeAccount = async (): Promise<AccountModel> => {
 
   return { id: account.insertedId.toString(), ...accountData }
 }
-
-const makeSaveSurveyResultData = ():SaveSurveyResultModel => ({
-  surveyId: 'survey_id',
-  accountId: 'account_id',
-  answer: 'any_answer',
-  date: new Date()
-})
-
-const makeSurveyResultData = (): SurveyResultModel => (Object.assign({}, makeSaveSurveyResultData(), { id: 'any_id' }))
 
 let surveyCollection: Collection
 let surveyResultCollection: Collection

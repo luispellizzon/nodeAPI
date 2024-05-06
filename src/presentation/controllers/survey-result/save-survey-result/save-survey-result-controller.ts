@@ -1,4 +1,4 @@
-import { Controller, HttpResponse, HttpsRequest, LoadSurveyById, forbidden, AccessDeniedError } from './save-survey-result-controller-protocols'
+import { Controller, HttpResponse, HttpsRequest, LoadSurveyById, forbidden, AccessDeniedError, InvalidParamError } from './save-survey-result-controller-protocols'
 
 export class SaveSurveyResultController implements Controller {
   constructor (private readonly loadSurveyById: LoadSurveyById) {
@@ -9,7 +9,7 @@ export class SaveSurveyResultController implements Controller {
     const { surveyId } = httpRequest.params
     const isSurvey = await this.loadSurveyById.loadById(surveyId)
     if (!isSurvey) {
-      return forbidden(new AccessDeniedError())
+      return forbidden(new InvalidParamError('survey_id'))
     }
   }
 }

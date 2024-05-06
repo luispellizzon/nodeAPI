@@ -1,6 +1,6 @@
 import { SurveyModel } from '@/domain/models/survey-model'
 import { SaveSurveyResultController } from './save-survey-result-controller'
-import { HttpsRequest, LoadSurveyById, forbidden, AccessDeniedError } from './save-survey-result-controller-protocols'
+import { HttpsRequest, LoadSurveyById, forbidden, AccessDeniedError, InvalidParamError } from './save-survey-result-controller-protocols'
 
 type SutTypes = {
     sut: SaveSurveyResultController,
@@ -57,6 +57,6 @@ describe('SaveSurveyResultController', () => {
     const { sut, loadSurveyById } = makeSut()
     jest.spyOn(loadSurveyById, 'loadById').mockReturnValueOnce(new Promise(resolve => resolve(null)))
     const response = await sut.handle(makeRequest())
-    expect(response).toEqual(forbidden(new AccessDeniedError()))
+    expect(response).toEqual(forbidden(new InvalidParamError('survey_id')))
   })
 })

@@ -4,33 +4,31 @@ import { Controller, HttpResponse, HttpsRequest, LoadSurveyById, forbidden, Inva
 export class SaveSurveyResultController implements Controller {
   constructor (
         private readonly loadSurveyById: LoadSurveyById,
-    private readonly saveSurveyResult: SaveSurveyResult) {
+        private readonly saveSurveyResult: SaveSurveyResult) {
     this.loadSurveyById = loadSurveyById
     this.saveSurveyResult = saveSurveyResult
   }
 
   async handle (httpRequest: HttpsRequest): Promise<HttpResponse> {
     try {
-      const { surveyId } = httpRequest.params
-      const { answer } = httpRequest.body
-      const { accountId } = httpRequest
+      const { params: { surveyId }, body: { answer }, accountId } = httpRequest
       const isSurvey = await this.loadSurveyById.loadById(surveyId)
-      if (isSurvey) {
-        const answers = isSurvey.answers.map(a => a.answer)
-        if (!answers.includes(answer)) {
-          return forbidden(new InvalidParamError('answer'))
-        } else {
-          const surveyResult = await this.saveSurveyResult.save({
-            surveyId,
-            accountId,
-            answer,
-            date: new Date()
-          })
-          return success(surveyResult)
-        }
-      } else {
-        return forbidden(new InvalidParamError('survey_id'))
+
+      if (!isSurvey) return forbidden(new InvalidParamError('survey_id'))
+
+      const answers = isSurvey.answers.map(a => a.answer)
+
+      if (!answers.includes(answer)) {
+        return forbidden(new InvalidParamError('answer'))
       }
+
+      const surveyResult = await this.saveSurveyResult.save({
+        surveyId,
+        accountId,
+        answer,
+        date: new Date()
+      })
+      return success(surveyResult)
     } catch (error) {
       return serverError(error)
     }

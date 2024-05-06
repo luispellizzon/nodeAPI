@@ -1,5 +1,5 @@
 import { SaveSurveyResult } from '@/domain/use-cases/survey-result/save-survey-result'
-import { Controller, HttpResponse, HttpsRequest, LoadSurveyById, forbidden, InvalidParamError, serverError } from './save-survey-result-controller-protocols'
+import { Controller, HttpResponse, HttpsRequest, LoadSurveyById, forbidden, InvalidParamError, serverError, success } from './save-survey-result-controller-protocols'
 
 export class SaveSurveyResultController implements Controller {
   constructor (
@@ -20,12 +20,13 @@ export class SaveSurveyResultController implements Controller {
         if (!answers.includes(answer)) {
           return forbidden(new InvalidParamError('answer'))
         } else {
-          await this.saveSurveyResult.save({
+          const surveyResult = await this.saveSurveyResult.save({
             surveyId,
             accountId,
             answer,
             date: new Date()
           })
+          return success(surveyResult)
         }
       } else {
         return forbidden(new InvalidParamError('survey_id'))

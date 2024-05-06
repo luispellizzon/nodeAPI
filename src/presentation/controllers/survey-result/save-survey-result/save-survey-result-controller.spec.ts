@@ -1,8 +1,6 @@
 import { SurveyModel } from '@/domain/models/survey-model'
 import { SaveSurveyResultController } from './save-survey-result-controller'
-import { HttpsRequest, LoadSurveyById } from './save-survey-result-controller-protocols'
-import { forbidden } from '@/presentation/helpers/http/http-helper'
-import { AccessDeniedError } from '@/presentation/errors'
+import { HttpsRequest, LoadSurveyById, forbidden, AccessDeniedError } from './save-survey-result-controller-protocols'
 
 type SutTypes = {
     sut: SaveSurveyResultController,
@@ -53,5 +51,12 @@ describe('SaveSurveyResultController', () => {
     const loadByIdSpy = jest.spyOn(loadSurveyById, 'loadById')
     await sut.handle(makeRequest())
     expect(loadByIdSpy).toHaveBeenCalledWith('any_id')
+  })
+
+  test('Should return 403 if LoadSurveyById returns null', async () => {
+    const { sut, loadSurveyById } = makeSut()
+    jest.spyOn(loadSurveyById, 'loadById').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    const response = await sut.handle(makeRequest())
+    expect(response).toEqual(forbidden(new AccessDeniedError()))
   })
 })

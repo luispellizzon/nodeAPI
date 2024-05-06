@@ -25,20 +25,14 @@ const makeSaveSurveyRepoStub = (): SaveSurveyResultRepository => {
   return new SaveSurveyResultRepositoryStub()
 }
 
-const makeSurveyResultData = ():SurveyResultModel => ({
-  id: 'any_id',
-  surveyId: 'survey_id',
-  accountId: 'account_id',
-  answer: 'any_answer',
-  date: new Date()
-})
-
 const makeSaveSurveyResultData = ():SaveSurveyResultModel => ({
   surveyId: 'survey_id',
   accountId: 'account_id',
   answer: 'any_answer',
   date: new Date()
 })
+
+const makeSurveyResultData = (): SurveyResultModel => (Object.assign({}, makeSaveSurveyResultData(), { id: 'any_id' }))
 
 describe('DbSaveSurveyResult use-case', () => {
   beforeAll(() => MockDate.set(new Date()))
@@ -56,5 +50,11 @@ describe('DbSaveSurveyResult use-case', () => {
     jest.spyOn(saveSurveyResultRepository, 'save').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const promise = sut.save(makeSaveSurveyResultData())
     expect(promise).rejects.toThrow()
+  })
+
+  test('Should return survey result on success', async () => {
+    const { sut } = makeSut()
+    const response = await sut.save(makeSaveSurveyResultData())
+    expect(response).toEqual(makeSurveyResultData())
   })
 })

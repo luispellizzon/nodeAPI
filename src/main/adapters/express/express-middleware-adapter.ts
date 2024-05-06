@@ -9,7 +9,7 @@ export const expressMiddlewareAdapter = (middleware: Middleware) => {
     const httpResponse = await middleware.handle(httpRequest)
 
     if (httpResponse.statusCode === 200) {
-      Object.assign(req, httpRequest.body)
+      Object.assign(req, httpResponse.body)
       next()
     } else {
       res.status(httpResponse.statusCode).json({

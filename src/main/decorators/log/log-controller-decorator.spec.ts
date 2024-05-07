@@ -8,15 +8,8 @@ import {
   LogErrorRepository
 } from './log-controller-decorator-protocols'
 import { LogControllerDecorator } from './log-controller-decorator'
-
-const makeLogErrorRepositoryStub = ():LogErrorRepository => {
-  class LogErrorRepositoryStub implements LogErrorRepository {
-    async logError (stack: string): Promise<void> {
-      return new Promise(resolve => resolve())
-    }
-  }
-  return new LogErrorRepositoryStub()
-}
+import { mockLogErrorRepository } from '@/data/test'
+import { mockAccountModel } from '@/domain/test'
 
 type SutTypes = {
   sut: LogControllerDecorator,
@@ -26,11 +19,11 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   class ControllerStub implements Controller {
     async handle (httpRequest: HttpsRequest): Promise<HttpResponse> {
-      return new Promise(resolve => resolve(success(makeFakeAccount())))
+      return new Promise(resolve => resolve(success(mockAccountModel())))
     }
   }
   const controllerStub = new ControllerStub()
-  const logErrorRepositoryStub = makeLogErrorRepositoryStub()
+  const logErrorRepositoryStub = mockLogErrorRepository()
   const sut = new LogControllerDecorator(controllerStub, logErrorRepositoryStub)
   return { sut, controllerStub, logErrorRepositoryStub }
 }
@@ -43,15 +36,6 @@ const makeFakeRequest = (): HttpsRequest => (
       password: 'valid_password',
       confirmationPassword: 'valid_password'
     }
-  }
-)
-
-const makeFakeAccount = (): AccountModel => (
-  {
-    id: 'valid_id',
-    name: 'valid name',
-    email: 'valid email',
-    password: 'valid password'
   }
 )
 
@@ -73,7 +57,7 @@ describe('Log Controller Decorator', () => {
     const { sut } = makeSut()
     const httpRequest = makeFakeRequest()
     const response = await sut.handle(httpRequest)
-    expect(response).toEqual(success(makeFakeAccount()))
+    expect(response).toEqual(success(mockAccountModel()))
   })
 
   test('Should LogControllerDecorator capture internal server error 500', async () => {

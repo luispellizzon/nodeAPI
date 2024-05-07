@@ -39,10 +39,10 @@ const makeAuthenticationStub = (): Authentication => {
 }
 
 const makeFakeRequest = () => ({
-  body: makeFakeAccount()
+  body: mockAccountModel()
 })
 
-const makeFakeAccount = () => ({
+const mockAccountModel = () => ({
   email: 'any_email@hotmail.com',
   password: 'any_password'
 })
@@ -61,7 +61,7 @@ describe('Login Controller', () => {
     const isAuthSpy = jest.spyOn(authenticationStub, 'auth')
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
-    const fakeAccount = makeFakeAccount()
+    const fakeAccount = mockAccountModel()
     expect(isAuthSpy).toHaveBeenCalledWith(fakeAccount)
   })
 

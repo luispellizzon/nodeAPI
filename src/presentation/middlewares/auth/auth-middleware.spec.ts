@@ -18,7 +18,7 @@ const makeSut = (role?:string): SutTypes => {
   }
 }
 
-const makeFakeAccount = ():AccountModel => (
+const mockAccountModel = ():AccountModel => (
   {
     id: 'any_id',
     name: 'any_name',
@@ -36,7 +36,7 @@ const makeFakeHeaderWithToken = (): HttpsRequest => ({
 const makeLoadAccountByTokenStub = () => {
   class LoadAccountByTokenStub implements LoadAccountByToken {
     async load (token: string, role?: string | undefined): Promise<AccountModel> {
-      return new Promise(resolve => resolve(makeFakeAccount()))
+      return new Promise(resolve => resolve(mockAccountModel()))
     }
   }
   return new LoadAccountByTokenStub()

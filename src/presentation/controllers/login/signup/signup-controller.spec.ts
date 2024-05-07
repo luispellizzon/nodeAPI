@@ -45,13 +45,13 @@ const makeValidationStub = (): any => {
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
     async add (credentials: AddAccountParams): Promise<AccountModel> {
-      return new Promise(resolve => resolve(makeFakeAccount()))
+      return new Promise(resolve => resolve(mockAccountModel()))
     }
   }
   return new AddAccountStub()
 }
 
-const makeFakeAccount = (): AccountModel => (
+const mockAccountModel = (): AccountModel => (
   {
     id: 'valid_id',
     name: 'any_name',
@@ -123,7 +123,7 @@ describe('Sign Up Controller', () => {
     const isAuthSpy = jest.spyOn(authenticationStub, 'auth')
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
-    const fakeAccount = makeFakeAccount()
+    const fakeAccount = mockAccountModel()
     expect(isAuthSpy).toHaveBeenCalledWith({ email: fakeAccount.email, password: fakeAccount.password })
   })
 

@@ -2,6 +2,7 @@ import { MissingParamError, ServerError, AlreadyExistsError } from '@/presentati
 import { AddAccount, AddAccountParams, AccountModel, HttpsRequest, Validation, Authentication, AuthenticationParams } from './signup-controller-protocols'
 import { SignUpController } from './signup-controller'
 import { success, serverError, badRequest, forbidden } from '@/presentation/helpers/http/http-helper'
+import { throwError } from '@/domain/test'
 
 type SutType = {
   sut: SignUpController,
@@ -128,7 +129,7 @@ describe('Sign Up Controller', () => {
 
   test('Should return 500 if authentication throws ', async () => {
     const { sut, authenticationStub } = makeSut()
-    jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(throwError)
     const httpRequest = makeFakeRequest()
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(serverError(new Error()))

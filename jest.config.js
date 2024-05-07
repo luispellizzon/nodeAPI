@@ -5,7 +5,10 @@
 
 /** @type {import('jest').Config} */
 const config = {
-  collectCoverageFrom: ['<rootDir>/src/**/*.ts', '!<rootDir>/src/main/**'],
+  collectCoverageFrom: [
+    '<rootDir>/src/**/*.ts',
+    '!<rootDir>/src/main/**',
+    '!**/test/**'],
   coveragePathIgnorePatterns: [
     'index.ts',
     '.+-protocols.ts'

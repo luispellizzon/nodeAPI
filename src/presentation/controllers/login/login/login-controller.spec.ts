@@ -2,15 +2,17 @@ import { LoginController } from './login-controller'
 import { badRequest, serverError, success, unauthorized } from '@/presentation/helpers/http/http-helper'
 import { Authentication, AuthenticationParams, HttpsRequest, Validation } from './login-controller-protocols'
 import { ValidationComposite } from '@/validation/validators/validation-composite'
-import { throwError } from '@/domain/test'
+import { mockAccountModel, throwError } from '@/domain/test'
+import { mockValidation } from '@/presentation/test/mock-validation'
+import { mockAuthentication } from '@/presentation/test'
 type SutTypes = {
     sut: LoginController,
   authenticationStub: Authentication,
   validationStub: Validation
 }
 const makeSut = (): SutTypes => {
-  const authenticationStub = makeAuthenticationStub()
-  const validationStub = new ValidationComposite([makeValidationStub()])
+  const authenticationStub = mockAuthentication()
+  const validationStub = new ValidationComposite([mockValidation()])
   const sut = new LoginController(authenticationStub, validationStub)
   return {
     sut,
@@ -19,34 +21,16 @@ const makeSut = (): SutTypes => {
   }
 }
 
-const makeValidationStub = (): any => {
-  class ValidationStub implements Validation {
-    validate (body: any): Error {
-      return null
+const makeFakeRequest = ():HttpsRequest => (
+  {
+    body: {
+      name: 'any_name',
+      email: 'any_email@hotmail.com',
+      password: 'any_password',
+      confirmationPassword: 'any_password'
     }
   }
-  return new ValidationStub()
-}
-
-const makeAuthenticationStub = (): Authentication => {
-  class AuthenticationStub implements Authentication {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async auth (authentication: AuthenticationParams): Promise<string> {
-      return new Promise(resolve => resolve('any_token'))
-    }
-  }
-  return new AuthenticationStub()
-}
-
-const makeFakeRequest = () => ({
-  body: mockAccountModel()
-})
-
-const mockAccountModel = () => ({
-  email: 'any_email@hotmail.com',
-  password: 'any_password'
-})
-
+)
 describe('Login Controller', () => {
   test('Should call Validation with correct email', async () => {
     const { sut, validationStub } = makeSut()
@@ -61,7 +45,7 @@ describe('Login Controller', () => {
     const isAuthSpy = jest.spyOn(authenticationStub, 'auth')
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
-    const fakeAccount = mockAccountModel()
+    const fakeAccount = { email: makeFakeRequest().body.email, password: makeFakeRequest().body.password }
     expect(isAuthSpy).toHaveBeenCalledWith(fakeAccount)
   })
 

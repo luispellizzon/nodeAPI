@@ -2,10 +2,10 @@ import { SurveyModel } from '@/domain/models/survey-model'
 import { SaveSurveyResultController } from './save-survey-result-controller'
 import { HttpsRequest, LoadSurveyById, forbidden, InvalidParamError, serverError } from './save-survey-result-controller-protocols'
 import { success } from '@/presentation/helpers/http/http-helper'
-import { SaveSurveyResult, SaveSurveyResultParams } from '@/domain/use-cases/survey-result/save-survey-result'
-import { SurveyResultModel } from '@/domain/models/survey-result'
-import { throwError } from '@/domain/test'
+import { SaveSurveyResult } from '@/domain/use-cases/survey-result/save-survey-result'
+import { mockSaveSurveyResult, throwError } from '@/domain/test'
 import MockDate from 'mockdate'
+import { mockLoadSurveyById, mockSaveSurveyResultStub } from '@/presentation/test/mock-survey-results'
 
 type SutTypes = {
     sut: SaveSurveyResultController,
@@ -14,8 +14,8 @@ type SutTypes = {
 }
 
 const makeSut = (): SutTypes => {
-  const loadSurveyById = makeLoadSurveyByIdStub()
-  const saveSurveyResultStub = makeSaveSurveyResultStub()
+  const loadSurveyById = mockLoadSurveyById()
+  const saveSurveyResultStub = mockSaveSurveyResultStub()
   const sut = new SaveSurveyResultController(loadSurveyById, saveSurveyResultStub)
   return {
     sut,
@@ -23,46 +23,6 @@ const makeSut = (): SutTypes => {
     saveSurveyResultStub
   }
 }
-
-const makeLoadSurveyByIdStub = (): LoadSurveyById => {
-  class LoadSurveyByIdStub implements LoadSurveyById {
-    async loadById (surveyId: string): Promise<SurveyModel> {
-      return new Promise(resolve => resolve(makeSurveyData()))
-    }
-  }
-  return new LoadSurveyByIdStub()
-}
-
-const makeSaveSurveyResultStub = (): SaveSurveyResult => {
-  class SaveSurveyResultStub implements SaveSurveyResult {
-    async save (data: SaveSurveyResultParams): Promise<SurveyResultModel> {
-      return new Promise(resolve => resolve(makeSurveyResultData()))
-    }
-  }
-  return new SaveSurveyResultStub()
-}
-
-const makeSurveyData = ():SurveyModel => ({
-  id: 'any_id',
-  question: 'any_question',
-  answers: [{
-    icon: 'any_icon',
-    answer: 'any_answer'
-  },
-  {
-    icon: 'any_icon2',
-    answer: 'any_answer2'
-  }],
-  date: new Date()
-})
-
-const makeSurveyResultData = (): SurveyResultModel => ({
-  id: 'valid_survey_result_id',
-  surveyId: 'valid_survey_id',
-  accountId: 'valid_account_id',
-  answer: 'valid_answer',
-  date: new Date()
-})
 
 const makeRequest = ():HttpsRequest => ({
   params: {
@@ -134,6 +94,6 @@ describe('SaveSurveyResultController', () => {
   test('Should return 200 on success', async () => {
     const { sut } = makeSut()
     const response = await sut.handle(makeRequest())
-    expect(response).toEqual(success(makeSurveyResultData()))
+    expect(response).toEqual(success(mockSaveSurveyResult()))
   })
 })

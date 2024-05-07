@@ -2,7 +2,9 @@ import { MissingParamError, ServerError, AlreadyExistsError } from '@/presentati
 import { AddAccount, AddAccountParams, AccountModel, HttpsRequest, Validation, Authentication, AuthenticationParams } from './signup-controller-protocols'
 import { SignUpController } from './signup-controller'
 import { success, serverError, badRequest, forbidden } from '@/presentation/helpers/http/http-helper'
-import { throwError } from '@/domain/test'
+import { mockAccountModel, throwError } from '@/domain/test'
+import { mockAuthentication, mockValidation } from '@/presentation/test'
+import { mockAddAccount } from '@/presentation/test/mock-add-account'
 
 type SutType = {
   sut: SignUpController,
@@ -11,9 +13,9 @@ type SutType = {
   authenticationStub: Authentication
 }
 const makeSut = (): SutType => {
-  const validationStub = makeValidationStub()
-  const addAccountStub = makeAddAccount()
-  const authenticationStub = makeAuthenticationStub()
+  const validationStub = mockValidation()
+  const addAccountStub = mockAddAccount()
+  const authenticationStub = mockAuthentication()
   const sut = new SignUpController(addAccountStub, validationStub, authenticationStub)
   return {
     sut,
@@ -22,43 +24,6 @@ const makeSut = (): SutType => {
     authenticationStub
   }
 }
-
-const makeAuthenticationStub = (): Authentication => {
-  class AuthenticationStub implements Authentication {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async auth (authentication: AuthenticationParams): Promise<string> {
-      return new Promise(resolve => resolve('any_token'))
-    }
-  }
-  return new AuthenticationStub()
-}
-
-const makeValidationStub = (): any => {
-  class ValidationStub implements Validation {
-    validate (body: any): Error {
-      return null
-    }
-  }
-  return new ValidationStub()
-}
-
-const makeAddAccount = (): AddAccount => {
-  class AddAccountStub implements AddAccount {
-    async add (credentials: AddAccountParams): Promise<AccountModel> {
-      return new Promise(resolve => resolve(mockAccountModel()))
-    }
-  }
-  return new AddAccountStub()
-}
-
-const mockAccountModel = (): AccountModel => (
-  {
-    id: 'valid_id',
-    name: 'any_name',
-    email: 'any_email@hotmail.com',
-    password: 'any_password'
-  }
-)
 
 const makeFakeRequest = ():HttpsRequest => (
   {
@@ -123,7 +88,7 @@ describe('Sign Up Controller', () => {
     const isAuthSpy = jest.spyOn(authenticationStub, 'auth')
     const httpRequest = makeFakeRequest()
     await sut.handle(httpRequest)
-    const fakeAccount = mockAccountModel()
+    const fakeAccount = makeFakeRequest().body
     expect(isAuthSpy).toHaveBeenCalledWith({ email: fakeAccount.email, password: fakeAccount.password })
   })
 

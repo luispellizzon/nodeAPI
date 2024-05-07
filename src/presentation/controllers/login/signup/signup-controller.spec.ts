@@ -1,5 +1,5 @@
 import { MissingParamError, ServerError, AlreadyExistsError } from '@/presentation/errors'
-import { AddAccount, AddAccountModel, AccountModel, HttpsRequest, Validation, Authentication, AuthenticationModel } from './signup-controller-protocols'
+import { AddAccount, AddAccountParams, AccountModel, HttpsRequest, Validation, Authentication, AuthenticationParams } from './signup-controller-protocols'
 import { SignUpController } from './signup-controller'
 import { success, serverError, badRequest, forbidden } from '@/presentation/helpers/http/http-helper'
 
@@ -25,7 +25,7 @@ const makeSut = (): SutType => {
 const makeAuthenticationStub = (): Authentication => {
   class AuthenticationStub implements Authentication {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async auth (authentication: AuthenticationModel): Promise<string> {
+    async auth (authentication: AuthenticationParams): Promise<string> {
       return new Promise(resolve => resolve('any_token'))
     }
   }
@@ -43,7 +43,7 @@ const makeValidationStub = (): any => {
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    async add (credentials: AddAccountModel): Promise<AccountModel> {
+    async add (credentials: AddAccountParams): Promise<AccountModel> {
       return new Promise(resolve => resolve(makeFakeAccount()))
     }
   }

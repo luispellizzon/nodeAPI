@@ -1,5 +1,5 @@
 import { DbAddSurvey } from './db-add-survey'
-import { AddSurveyRepository, AddSurveyModel } from './db-add-survey-protocols'
+import { AddSurveyRepository, AddSurveyParams } from './db-add-survey-protocols'
 
 type SutTypes = {
     sut: DbAddSurvey,
@@ -17,7 +17,7 @@ const makeSut = (): SutTypes => {
 
 const makeAddSurveyRepoStub = () => {
   class AddAccountRepositoryStub implements AddSurveyRepository {
-    add (accountData: AddSurveyModel): Promise<void> {
+    add (accountData: AddSurveyParams): Promise<void> {
       return new Promise(resolve => resolve())
     }
   }

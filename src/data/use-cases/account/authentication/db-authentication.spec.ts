@@ -1,5 +1,5 @@
 import { DbAuthentication } from './db-authentication'
-import { UpdateAccessTokenRepository, Encrypter, HashComparer, LoadAccountByEmailRepository, AuthenticationModel, AccountModel } from './db-authentication-protocols'
+import { UpdateAccessTokenRepository, Encrypter, HashComparer, LoadAccountByEmailRepository, AuthenticationParams, AccountModel } from './db-authentication-protocols'
 
 const makeLoadAccountByEmailRepositoryStub = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
@@ -45,7 +45,7 @@ const makeFakeAccount = (): AccountModel => ({
   password: 'hashed_password'
 })
 
-const makeFakeAuthentication = ():AuthenticationModel => ({
+const makeFakeAuthentication = ():AuthenticationParams => ({
   email: 'any_email@gmail.com',
   password: 'any_password'
 })

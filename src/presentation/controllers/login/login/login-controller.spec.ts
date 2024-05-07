@@ -1,6 +1,6 @@
 import { LoginController } from './login-controller'
 import { badRequest, serverError, success, unauthorized } from '@/presentation/helpers/http/http-helper'
-import { Authentication, AuthenticationModel, HttpsRequest, Validation } from './login-controller-protocols'
+import { Authentication, AuthenticationParams, HttpsRequest, Validation } from './login-controller-protocols'
 import { ValidationComposite } from '@/validation/validators/validation-composite'
 type SutTypes = {
     sut: LoginController,
@@ -30,7 +30,7 @@ const makeValidationStub = (): any => {
 const makeAuthenticationStub = (): Authentication => {
   class AuthenticationStub implements Authentication {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async auth (authentication: AuthenticationModel): Promise<string> {
+    async auth (authentication: AuthenticationParams): Promise<string> {
       return new Promise(resolve => resolve('any_token'))
     }
   }

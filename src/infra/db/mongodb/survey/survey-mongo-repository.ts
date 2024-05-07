@@ -1,9 +1,9 @@
-import { LoadSurveysRepository, LoadSurveyByIdRepository, AddSurveyModel, AddSurveyRepository, SurveyModel } from './survey-mongo-repository-protocols'
+import { LoadSurveysRepository, LoadSurveyByIdRepository, AddSurveyParams, AddSurveyRepository, SurveyModel } from './survey-mongo-repository-protocols'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { ObjectId } from 'mongodb'
 
 export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyByIdRepository {
-  async add (accountData: AddSurveyModel): Promise<void> {
+  async add (accountData: AddSurveyParams): Promise<void> {
     (await MongoHelper.getCollection('surveys')).insertOne(accountData)
   }
 

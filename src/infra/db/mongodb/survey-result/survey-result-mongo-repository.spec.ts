@@ -3,7 +3,7 @@ import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import { SurveyResultMongoRepository } from './survey-result-mongo-repository'
 import MockDate from 'mockdate'
 import { SurveyModel } from '../survey/survey-mongo-repository-protocols'
-import { AccountModel, AddAccountModel } from '../account/account-mongo-repository-protocols'
+import { AccountModel, AddAccountParams } from '../account/account-mongo-repository-protocols'
 
 type SutTypes = {
     sut: SurveyResultMongoRepository
@@ -34,7 +34,7 @@ const makeSurvey = async (): Promise<SurveyModel> => {
 }
 
 const makeAccount = async (): Promise<AccountModel> => {
-  const accountData:AddAccountModel = {
+  const accountData:AddAccountParams = {
     name: 'any_name',
     email: 'any_email@hotmail.com',
     password: 'any_password'

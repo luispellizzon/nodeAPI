@@ -21,7 +21,6 @@ export const signUpPath = {
             }
           }
         }
-
       },
       400: {
         $ref: '#/components/badRequest'

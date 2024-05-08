@@ -1,4 +1,4 @@
-export const unauthorizedErrorSchema = {
+export const errorSchema = {
   type: 'object',
   properties: {
     error: {
